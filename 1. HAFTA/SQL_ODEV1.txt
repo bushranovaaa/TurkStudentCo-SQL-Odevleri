@@ -1,46 +1,95 @@
-## A. Belirli Kolonları Seçme
-**Soru:** Çalışanların sadece ad, soyad ve maaş bilgilerini getiren SQL sorgusunu yazınız.
+A. Belirli Kolonları Seçme  
+*Soru:* Çalışanların sadece ad, soyad ve maaş bilgilerini getiren SQL sorgusunu yazınız.  
 
-''' sql
-    SELECT FirstName, LastName, Salary
-    FROM Employees;
+```sql
+-- Çalışanların sadece ad, soyad ve maaş bilgilerini getirir.
+SELECT FirstName, LastName, Salary 
+FROM Employees;
+```
+📌 *Çıktı (Örnek - 6 satır dönebilir):*  
+| FirstName | LastName | Salary  |  
+|-----------|---------|---------|  
+| John      | Doe     | 55000.00 |  
+| Jane      | Smith   | 65000.00 |  
+| Sam       | Brown   | 52000.00 |  
+| Lisa      | White   | 70000.00 |  
+| Mark      | Black   | 75000.00 |  
+| Lucy      | Green   | 60000.00 |  
 
-**Açıklama:** Bu sorgu, Employees tablosundan sadece çalışanların adı, soyadı ve maaş bilgilerini getirir. Diğer sütunlar dahil edilmez.
+---
 
-## B. DISTINCT Komutu ile Tekrarları Önleme
-**Soru:** Çalışanların çalıştıkları departmanları benzersiz olarak listeleyen SQL sorgusunu yazınız.
+B. DISTINCT Komutu ile Tekrarları Önleme  
+*Soru:* Çalışanların çalıştıkları departmanları benzersiz olarak listeleyen SQL sorgusunu yazınız.  
 
-''' sql
-    SELECT DISTINCT DepartmentID
-    FROM Employees;
+```sql
+-- Çalışanların benzersiz departmanlarını getirir.
+SELECT DISTINCT DepartmentID 
+FROM Employees;
+```
+📌 *Çıktı (Örnek - 3 satır dönebilir):*  
+| DepartmentID |  
+|-------------|  
+| 1           |  
+| 2           |  
+| 3           |  
 
-**Açıklama:** Bu sorgu, tekrar eden departman kimliklerini sadece bir kez gösterir. Eğer departman adlarını görmek isterseniz, Departments tablosundan DepartmentName sütununu kullanmanız gerekecek.
+---
 
-## C. Belirli Bir Departmana Ait Çalışanları Listeleme
-**Soru:** Sadece IT departmanında çalışanları listeleyen SQL sorgusunu yazınız.
+C. Belirli Bir Departmana Ait Çalışanları Listeleme  
+*Soru:* Sadece IT departmanında çalışanları listeleyen SQL sorgusunu yazınız.  
 
-'''sql
-   SELECT * 
-   FROM Employees
-   WHERE DepartmentID = 1;  -- IT departmanının ID'si 1
+```sql
+-- IT (DepartmentID = 1) departmanındaki çalışanları getirir.
+SELECT * 
+FROM Employees
+WHERE DepartmentID = 1;
+```
+📌 *Çıktı (Örnek - 3 satır dönebilir):*  
+| EmployeeID | FirstName | LastName | Age | DepartmentID | Salary  | JoinDate   |  
+|-----------|----------|---------|-----|-------------|--------|-----------|  
+| 1         | John     | Doe     | 30  | 1           | 55000.00 | 2020-01-15 |  
+| 3         | Sam      | Brown   | 28  | 1           | 52000.00 | 2021-04-25 |  
+| 5         | Mark     | Black   | 50  | 1           | 75000.00 | 2015-11-05 |  
 
-**Açıklama:** Burada, WHERE komutu kullanılarak sadece IT departmanında çalışanlar filtrelenmiştir. IT departmanının DepartmentID değeri 1 olduğundan, sorguda bu ID kullanılır.
+---
 
-## D. Maaşa Göre Sıralama
-**Soru:** Çalışanları maaşlarına göre büyükten küçüğe sıralayan SQL sorgusunu yazınız.
+D. Maaşa Göre Sıralama  
+*Soru:* Çalışanları maaşlarına göre büyükten küçüğe sıralayan SQL sorgusunu yazınız.  
 
-''' sql
-    SELECT * 
-    FROM Employees 
-    ORDER BY Salary DESC;
+```sql
+-- Çalışanları maaşlarına göre büyükten küçüğe sıralar.
+SELECT * 
+FROM Employees 
+ORDER BY Salary DESC;
+```
+📌 *Çıktı (Örnek - 6 satır dönebilir):*  
+| EmployeeID | FirstName | LastName | Age | DepartmentID | Salary  | JoinDate   |  
+|-----------|----------|---------|-----|-------------|--------|-----------|  
+| 5         | Mark     | Black   | 50  | 1           | 75000.00 | 2015-11-05 |  
+| 4         | Lisa     | White   | 35  | 3           | 70000.00 | 2019-03-18 |  
+| 2         | Jane     | Smith   | 45  | 2           | 65000.00 | 2018-07-20 |  
+| 6         | Lucy     | Green   | 40  | 2           | 60000.00 | 2017-10-10 |
+| 1         | John     | Doe     | 30  | 1           | 55000.00 | 2020-01-15 |  
+| 3         | Sam      | Brown   | 28  | 1           | 52000.00 | 2021-04-25 |  
 
-**Açıklama:** Bu sorgu, çalışanları maaşlarına göre büyükten küçüğe sıralar. DESC komutu kullanıldığı için en yüksek maaşlı çalışan en üstte yer alır.
+---
 
-## E. Kolonları Birleştirme (Concatenation)
-Soru: Çalışanları ad ve soyadlarını birleştirerek tam isim oluşturan SQL sorgusunu yazınız.
+E. Kolonları Birleştirme (Concatenation)  
+*Soru:* Çalışanların ad ve soyadlarını birleştirerek tam isim oluşturan SQL sorgusunu yazınız.  
 
-''' sql
-    SELECT CONCAT(FirstName, ' ', LastName) AS FullName
-    FROM Employees;
+```sql
+-- Çalışanların ad ve soyadlarını birleştirerek tam isim oluşturur.
+SELECT CONCAT(FirstName, ' ', LastName) AS FullName 
+FROM Employees;
+```
+📌 *Çıktı (Örnek - 6 satır dönebilir):*  
+| FullName    |  
+|------------|  
+| John Doe   |  
+| Jane Smith |  
+| Sam Brown  |  
+| Lisa White |  
+| Mark Black |  
+| Lucy Green |  
 
-**Açıklama:** Bu sorgu, CONCAT fonksiyonunu kullanarak FirstName ve LastName sütunlarını birleştirir ve yeni bir sütun olarak FullName şeklinde gösterir.
+---
