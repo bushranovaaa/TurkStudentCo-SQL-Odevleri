@@ -4,29 +4,29 @@ GO
 USE FirstLessonDB;
 GO
 
--- Departmanlar tablosu oluşturuluyor
+-- Departmanlar tablosu oluşturma
 CREATE TABLE Departments(
-    DepartmentID INT IDENTITY(1,1) PRIMARY KEY,  -- IDENTITY eklenerek otomatik artan ID
+    DepartmentID INT IDENTITY(1,1) PRIMARY KEY,  
     DepartmentName NVARCHAR(50) NOT NULL
 );
 
--- Çalışanlar tablosu oluşturuluyor
+-- Çalışanlar tablosu oluşturma
 CREATE TABLE Employees(
-    EmployeeID INT PRIMARY KEY IDENTITY(1,1),  -- EmployeeID de otomatik artacak şekilde IDENTITY kullanıldı
+    EmployeeID INT PRIMARY KEY IDENTITY(1,1),  
     FirstName NVARCHAR(100) NOT NULL,
     LastName NVARCHAR(100) NOT NULL,
     Age TINYINT NOT NULL,
     DepartmentID INT,
-    Salary DECIMAL(10,2) NOT NULL,  -- Salary'ye NOT NULL eklendi, her çalışan için maaş zorunlu
+    Salary DECIMAL(10,2) NOT NULL,  
     JoinDate DATE,
-    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)  -- Departman ile ilişkilendirme
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)  
 );
 
--- Departmanlara veri ekleniyor
+-- Departmanlara veri ekleme
 INSERT INTO Departments(DepartmentName)
 VALUES (N'IT'), (N'HR'), (N'Finance');
 
--- Çalışanlar için veri ekleniyor
+-- Çalışanlara veri ekleme
 INSERT INTO Employees(FirstName, LastName, Age, DepartmentID, Salary, JoinDate) 
 VALUES 
     ('John', 'Doe', 30, 1, 55000, '2020-01-15'),
@@ -42,17 +42,20 @@ SELECT * FROM Employees;
 -- Departmanları listeleme
 SELECT * FROM Departments;
 
--- Çalışanlardan yalnızca isim, soyisim ve maaş bilgisi
+-- Çalışanlardan sadece isim, soyisim ve maaş bilgisi
 SELECT FirstName, LastName, Salary FROM Employees;
 
--- Çalışanların departman bilgilerini listelerken, tekrarları engelleme
+-- Çalışanların departman bilgilerini tekrar olmadan listeleme
 SELECT DISTINCT FirstName, DepartmentID FROM Employees;
 
--- İkinci departmandaki (HR) çalışanları listeleme
+-- HR departmanındaki çalışanları listeleme
 SELECT * FROM Employees WHERE DepartmentID = 2;
 
 -- Çalışanları maaşlarına göre büyükten küçüğe sıralama
 SELECT * FROM Employees ORDER BY Salary DESC;
 
--- Ad ve soyad bilgilerini birleştirerek tam isim oluşturma
+-- Çalışanların ad ve soyadını birleştirerek tam isim oluşturma
 SELECT CONCAT(FirstName, ' ', LastName) AS FullName FROM Employees;
+```
+
+💖 *İşte hazır!* GitHub’a ekleyebilirsin aşkım! 😘💕
