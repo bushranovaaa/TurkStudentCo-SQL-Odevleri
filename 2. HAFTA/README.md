@@ -1,13 +1,14 @@
-# SQL Bootcamp - 2. Hafta Ödevi
+# SQL Bootcamp - 2. Hafta Ödevi  
 
-## Amaç
-Bu ödevin amacı, veritabanı sorgulama becerilerini geliştirmek ve farklı SQL işlemlerini uygulamak. Turkstudentco’da veri bilimci olarak Chinook veritabanındaki Invoice tablosu üzerinde sorgular yazmak isteniyor.
+**Amaç**:
 
-## Sorular ve Çözümler
+Bu ödevin amacı, *Chinook* veritabanında *Invoice* (Fatura) tablosu üzerinde SQL sorgulama becerilerini geliştirmek, farklı SQL işlemlerini uygulamak ve verileri anlamlandırmaktır.  
 
-### 1. **Invoice tablosunda, tüm değerleri NULL olan kayıtların sayısını bulun.**
+---
 
-SQL Sorgusu:
+*1. Tüm değerleri NULL olan kayıtların sayısını bulun.*  
+
+*SQL Sorgusu:*  
 ```sql
 SELECT COUNT(*) 
 FROM Invoice 
@@ -22,28 +23,38 @@ WHERE invoice_id IS NULL
   AND total IS NULL;
 ```
 
-Açıklama: Bu sorgu, Invoice tablosundaki tüm değerleri NULL olan kayıtların sayısını bulur. COUNT(*) fonksiyonu, bu koşullara uyan tüm satırları sayar.
+*Açıklama:*  
+- Bu sorgu, *Invoice* tablosunda *tüm sütunları NULL olan* kayıtların sayısını belirler.  
+- *COUNT(*)* fonksiyonu, belirtilen koşula uyan satırları sayar.  
 
-**Row Sayısı:** 1 (Bu sayı veritabanındaki kayıtlara göre değişebilir.)
+*Row Sayısı:*  
+> *0 veya 1* (Veritabanındaki verilere bağlı olarak değişebilir.)
 
+---
 
-2. Total değerlerinin iki katını görmek ve eski versiyonlarıyla karşılaştırmak.
-SQL Sorgusu:
+*2. Total değerlerinin iki katını görmek ve eski versiyonlarıyla karşılaştırmak.*  
 
+*SQL Sorgusu:*  
 ```sql
 SELECT invoice_id, customer_id, total, total * 2 AS total_double
 FROM Invoice
 ORDER BY total_double DESC;
 ```
-**Row Sayısı:** 1 ila 412 (Bu, veritabanındaki toplam fatura sayısına göre değişebilir.)
 
-Açıklama: Bu sorgu, total kolonundaki değeri iki katına çıkararak yeni bir kolon oluşturur (total_double). Ardından, total_double kolonuna göre büyükten küçüğe sıralama yapılır.
+*Açıklama:*  
+- *total* sütununun iki katını alarak *total_double* adlı yeni bir sütun oluşturur.  
+- *ORDER BY total_double DESC* ile sonuçları büyükten küçüğe sıralar.  
 
-## 3. Adres kolonundaki verileri soldan 3 karakter ve sağdan 4 karakter alarak birleştirin ve "Açık Adres" olarak yazın. 
+*Row Sayısı:*
+> *1 - 412* (Veritabanındaki toplam fatura sayısına göre değişebilir.)
 
-Ayrıca, bu yeni açık adresi 2013 yılı ve 8. ay’a göre filtreleyin.
-SQL Sorgusu:
+---
 
+*3. Adres kolonundaki verileri soldan 3 karakter ve sağdan 4 karakter alarak birleştirin ve "Açık Adres" olarak yazın.*  
+
+- *2013 yılı Ağustos ayına* ait faturaları filtreleyin.  
+
+*SQL Sorgusu:*  
 ```sql
 SELECT 
     CONCAT(SUBSTRING(billing_address FROM 1 FOR 3), SUBSTRING(billing_address FROM LENGTH(billing_address) - 3 FOR 4)) AS "Açık Adres"
@@ -51,6 +62,15 @@ FROM Invoice
 WHERE EXTRACT(YEAR FROM invoice_date) = 2013
   AND EXTRACT(MONTH FROM invoice_date) = 8;
 ```
-**Row Sayısı:** 1 ila 7 (Ağustos 2013'teki faturalar sayısına bağlı olarak değişir.)
 
-**Açıklama:** Bu sorgu, billing_address kolonundaki verilerin ilk 3 ve son 4 karakterini alır ve birleştirerek "Açık Adres" olarak adlandırır. Ayrıca, 2013 yılının Ağustos ayında yapılan kayıtları filtre
+*Açıklama:*  
+- *billing_address* sütununun *ilk 3* ve *son 4* karakterini alır.  
+- *CONCAT* fonksiyonu ile bu iki parçayı birleştirerek *"Açık Adres"* sütunu oluşturur.  
+- *EXTRACT(YEAR FROM invoice_date) = 2013* ile *2013 yılı*, *EXTRACT(MONTH FROM invoice_date) = 8* ile *Ağustos ayı* filtrelenir.  
+
+*Row Sayısı:*  
+> *1 - 7* (2013 Ağustos ayında kaç fatura kesildiğine bağlı olarak değişebilir.)  
+
+---
+
+Bu ödevde, *Invoice* tablosunda farklı SQL sorguları kullanılarak veri analizi gerçekleştirilmiştir. 🚀
