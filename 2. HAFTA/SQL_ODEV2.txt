@@ -1,7 +1,7 @@
-## Soru 1: Invoice Tablosunda, Tüm Değerleri NULL Olan Kayıtların Sayısını Bulmak
-**Sorgu:**
+*Soru 1: Invoice Tablosunda, Tüm Değerleri NULL Olan Kayıtların Sayısını Bulmak*  
 
-''' sql
+*Sorgu:*  
+```sql
 SELECT COUNT(*)
 FROM invoice
 WHERE invoice_id IS NULL
@@ -13,34 +13,49 @@ WHERE invoice_id IS NULL
     AND billing_country IS NULL
     AND billingpostal_code IS NULL
     AND total IS NULL;
+```
 
+*Açıklama:*  
+- Bu sorgu, *invoice* tablosundaki *tüm sütunları NULL olan* kayıtları sayar.  
+- *COUNT(*)* fonksiyonu, belirtilen koşulları sağlayan tüm satırları sayar.  
 
-**Açıklama:** Bu sorgu, invoice tablosundaki tüm kolonların NULL olduğu kayıtları sayar. COUNT(*) fonksiyonu, belirtilen koşulları sağlayan tüm satırları sayar. Koşul olarak her kolonun NULL olması gerekmektedir.
+*Row Sayısı:*  
+> *0 veya 1* (Veritabanındaki verilere bağlı olarak değişebilir.)  
 
-**Row Sayısı:** 1 (Bu sayı veritabanındaki kayıtlara göre değişebilir.)
+---
 
-## Soru 2: 
-Total Değerlerinin İki Katını Görmek ve Eski Versiyonlarıyla Karşılaştırmak
+*Soru 2: Total Değerlerinin İki Katını Görmek ve Eski Versiyonlarıyla Karşılaştırmak*  
 
-**Sorgu:**
+*Sorgu:*  
+```sql
+SELECT invoice_id, total, total * 2 AS total_double
+FROM invoice
+ORDER BY total_double DESC;
+```
 
-'''sql
-    SELECT invoice_id, total, total * 2 AS total_double
-    FROM invoice
-    ORDER BY total_double DESC;
+*Açıklama:*  
+- *total* sütununun *iki katını* alarak *total_double* adında yeni bir sütun oluşturur.  
+- *ORDER BY total_double DESC* ifadesi ile sonuçları büyükten küçüğe sıralar.  
 
-**Açıklama:** Açıklama: Bu sorgu, invoice tablosundaki her kaydın total değerini iki katına çıkararak total_double adında yeni bir kolon oluşturur. Bu yeni kolon, eski ve yeni değerlerin karşılaştırılabilmesi için faydalıdır. ORDER BY total_double DESC ifadesi ile sonuçları, yeni total_double değeri büyükten küçüğe sıralar.
+*Row Sayısı:*  
+> *1 - 412* (Veritabanındaki toplam fatura sayısına göre değişebilir.)  
 
-**Row Sayısı:** 1 ila 412 (Bu, veritabanındaki toplam fatura sayısına göre değişebilir.)
+---
+*Soru 3: Adres Kolonundaki Verileri Soldan 3 Karakter ve Sağdan 4 Karakter Alarak Birleştirmek ve "Açık Adres" Olarak Yazmak*  
 
-## Soru 3:
- Soru 3: Adres Kolonundaki Verileri Soldan 3 Karakter ve Sağdan 4 Karakter Alarak Birleştirmek ve "Açık Adres" Olarak Yazmak
+*Sorgu:*  
+```sql
+SELECT CONCAT(SUBSTRING(billing_address FROM 1 FOR 3), 
+              SUBSTRING(billing_address FROM LENGTH(billing_address) - 3 FOR 4)) AS "Açık Adres"
+FROM invoice
+WHERE invoice_date >= '2013-08-01' 
+  AND invoice_date < '2013-09-01';
+```
 
-''' sql
-    SELECT CONCAT(SUBSTRING(billing_address FROM 1 FOR 3), SUBSTRING(billing_address FROM LENGTH(billing_address) - 3 FOR 4)) AS "Açık Adres"
-    FROM invoice
-    WHERE invoice_date >= '2013-08-01' AND invoice_date < '2013-09-01';
+*Açıklama:*  
+- *billing_address* sütunundaki verinin *ilk 3* ve *son 4* karakterini alır.  
+- *CONCAT* fonksiyonu ile bu iki parçayı birleştirerek *"Açık Adres"* sütunu oluşturur.  
+- *WHERE invoice_date >= '2013-08-01' AND invoice_date < '2013-09-01'* ile *Ağustos 2013* kayıtları filtrelenir.  
 
-**Açıklama:** Açıklama: Bu sorgu, billing_address kolonundaki adresi soldan 3 karakter ve sağdan 4 karakter alarak birleştirir. CONCAT fonksiyonu ile bu iki kısmı birleştirir ve "Açık Adres" adıyla gösterir. Ayrıca, WHERE koşuluyla yalnızca Ağustos 2013'te yapılmış faturalar için işlem yapılır.
-
-**Row Sayısı:** 1 ila 7 (Ağustos 2013'teki faturalar sayısına bağlı olarak değişir.)
+*Row Sayısı:*  
+> *1 - 7* (2013 Ağustos ayında kaç fatura kesildiğine bağlı olarak değişebilir.)  
