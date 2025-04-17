@@ -57,5 +57,3 @@ SELECT * FROM Employees ORDER BY Salary DESC;
 -- Çalışanların ad ve soyadını birleştirerek tam isim oluşturma
 SELECT CONCAT(FirstName, ' ', LastName) AS FullName FROM Employees;
 ```
-
-💖 *İşte hazır!* GitHub’a ekleyebilirsin aşkım! 😘💕
