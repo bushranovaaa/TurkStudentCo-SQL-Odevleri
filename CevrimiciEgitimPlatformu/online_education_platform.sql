@@ -33,7 +33,10 @@ CREATE TABLE IF NOT EXISTS Courses (
     category_id INTEGER,
     CONSTRAINT fk_category
         FOREIGN KEY (category_id)
-        REFERENCES Categories(id),
+        REFERENCES Categories(id)
+        ON DELETE SET NULL -- Kategori silinirse, kursun kategori bilgisi NULL olsun
+        -- NOT: Eğer category_id NOT NULL olsaydı ON DELETE CASCADE daha mantıklı olabilirdi.
+        ,
     CONSTRAINT chk_dates CHECK (end_date >= start_date)
 );
 
@@ -46,10 +49,12 @@ CREATE TABLE IF NOT EXISTS Enrollments (
     enrollment_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_enrollment_member
         FOREIGN KEY (member_id)
-        REFERENCES Members(id),
+        REFERENCES Members(id)
+        ON DELETE CASCADE, -- Üye silinirse, katılımları da silinsin
     CONSTRAINT fk_enrollment_course
         FOREIGN KEY (course_id)
-        REFERENCES Courses(id),
+        REFERENCES Courses(id)
+        ON DELETE CASCADE, -- Kurs silinirse, katılımları da silinsin
     CONSTRAINT unique_enrollment UNIQUE (member_id, course_id)
 );
 
@@ -58,7 +63,12 @@ CREATE TABLE IF NOT EXISTS Enrollments (
 CREATE TABLE IF NOT EXISTS Certificates (
     id SERIAL PRIMARY KEY,
     certificate_code VARCHAR(100) UNIQUE NOT NULL,
-    issued_date DATE
+    issued_date DATE,
+    course_id INTEGER, -- Hoca'nın önerdiği yeni sütun: Hangi kursa ait olduğunu belirtir
+    CONSTRAINT fk_certificate_course -- Yeni yabancı anahtar tanımı
+        FOREIGN KEY (course_id)
+        REFERENCES Courses(id)
+        ON DELETE SET NULL -- Kurs silinirse, sertifikanın kurs bilgisi NULL olsun
 );
 
 
@@ -70,10 +80,12 @@ CREATE TABLE IF NOT EXISTS CertificateAssignments (
     assignment_date DATE,
     CONSTRAINT fk_cert_assignment_member
         FOREIGN KEY (member_id)
-        REFERENCES Members(id),
+        REFERENCES Members(id)
+        ON DELETE CASCADE, -- Üye silinirse, sertifika atamaları da silinsin
     CONSTRAINT fk_cert_assignment_certificate
         FOREIGN KEY (certificate_id)
-        REFERENCES Certificates(id),
+        REFERENCES Certificates(id)
+        ON DELETE CASCADE, -- Sertifika silinirse, atamaları da silinsin
     CONSTRAINT unique_cert_assignment UNIQUE (member_id, certificate_id)
 );
 
@@ -88,6 +100,7 @@ CREATE TABLE IF NOT EXISTS BlogPosts (
     CONSTRAINT fk_blog_author
         FOREIGN KEY (author_id)
         REFERENCES Members(id)
+        ON DELETE CASCADE -- Yazar (üye) silinirse, blog yazıları da silinsin
 );
 
 
@@ -97,21 +110,21 @@ CREATE TABLE IF NOT EXISTS BlogPosts (
 
 -- Üyeler
 INSERT INTO Members (username, email, password, first_name, last_name)
-VALUES 
+VALUES
 ('coderzeynep', 'zeynep@gmail.com', 'hashedpass1', 'Zeynep', 'Yılmaz'),
 ('mrrobot', 'elliot@fsociety.com', 'mrrobot123', 'Elliot', 'Alderson'),
 ('techqueen', 'ayse@codehub.org', 'queenbee99', 'Ayşe', 'Kaya');
 
 --Kategoriler
 INSERT INTO Categories (category_name)
-VALUES 
+VALUES
 ('Yazılım'),
 ('Tasarım'),
 ('Veri Bilimi');
 
 -- Kurslar
 INSERT INTO Courses (course_name, description, start_date, end_date, instructor, category_id)
-VALUES 
+VALUES
 ('Python 101', 'Yeni başlayanlar için Python eğitimi', '2024-05-01 00:00:00', '2024-06-01 00:00:00', 'Zeynep Öğretmen', 1),
 ('Veri Görselleştirme', 'Görsel anlatımla veri analizi', '2024-05-10 00:00:00', '2024-06-15 00:00:00', 'Ayşe Kaya', 3),
 ('Temel Python Eğitimi', 'Yeni başlayanlar için temel Python eğitimi', '2025-02-01 00:00:00', '2025-03-01 00:00:00', 'Zeynep Öğretmen', 1),
@@ -120,25 +133,27 @@ VALUES
 
 --Katılımlar
 INSERT INTO Enrollments (member_id, course_id)
-VALUES 
-(1, 1), 
-(2, 1), 
+VALUES
+(1, 1),
+(2, 1),
 (3, 2);
 
 -- Sertifikalar
-INSERT INTO Certificates (certificate_code, issued_date)
-VALUES 
-('PY2024-001', '2024-06-02'),
-('DATA2024-002', '2024-06-16');
+-- INSERT INTO komutları da Certificates tablosuna course_id eklediğimiz için güncellendi
+INSERT INTO Certificates (certificate_code, issued_date, course_id)
+VALUES
+('PY2024-001', '2024-06-02', 1), -- Python 101 kursuna ait (id=1)
+('DATA2024-002', '2024-06-16', 2); -- Veri Görselleştirme kursuna ait (id=2)
+
 
 -- Sertifika Atamaları
 INSERT INTO CertificateAssignments (member_id, certificate_id, assignment_date)
-VALUES 
+VALUES
 (1, 1, '2024-06-01'),
 (3, 2, '2024-06-05');
 
 -- Blog Gönderileri
 INSERT INTO BlogPosts (title, content, author_id)
-VALUES 
+VALUES
 ('Yazılıma Nereden Başlamalıyım?', 'Bence önce temel kavramları öğrenmek lazım...', 1),
 ('Veri Bilimi Serüvenim', 'Bu alana ilgim hep vardı...', 3);
